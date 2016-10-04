@@ -6,7 +6,20 @@
 using namespace sf;
 using namespace std;
 
-int main() {
+bool gameGoing = true;
+bool menu = false;
+
+int gameOver() {
+    cout<<"gameover"<<endl;
+    return EXIT_SUCCESS;
+}
+
+int menuScene() {
+    cout<<"gameover"<<endl;
+    return EXIT_SUCCESS;
+}
+
+int gamePlay() {
     RenderWindow window(VideoMode(800, 600) ,"Pixel Run");
     window.setFramerateLimit(200);
     
@@ -47,21 +60,55 @@ int main() {
     const int cointRootPosY = 450;
     coin.setTexture(coinFaceTexture);
     coin.setPosition(500, 450);
+    bool collected = false;
     
+    RectangleShape coinCollitionBox(Vector2f(50, 50));
+    coinCollitionBox.setPosition(500, 450);
     Clock coinClock;
+    //fire stuff
+    Texture fireTexture1;
+    Texture fireTexture2;
+    Texture fireTexture3;
+    
+    fireTexture1.loadFromFile("/Users/Newton/downloads/fire1.png");
+    fireTexture2.loadFromFile("/Users/Newton/downloads/fire2.png");
+    fireTexture3.loadFromFile("/Users/Newton/downloads/fire3.png");
+    
+    int fireRootY = 470;
+    int fire1X = 600;
+    int fire2X = 1000;
+    int fire3X = 1400;
+    int fireCollitionRootY = 490;
+    
+    int fireCollitionWidth = 70;
+    int fireCollitionHeight = 50;
+    
+    Sprite fire1, fire2, fire3;
+    fire1.setTexture(fireTexture1);
+    fire1.setPosition(fire1X, fireRootY);
+    fire2.setTexture(fireTexture1);
+    fire2.setPosition(fire2X, fireRootY);
+    fire3.setTexture(fireTexture1);
+    fire3.setPosition(fire3X, fireRootY);
+    
+    RectangleShape fire1Collition(Vector2f(fireCollitionWidth, fireCollitionHeight));
+    RectangleShape fire2Collition(Vector2f(fireCollitionWidth, fireCollitionHeight));
+    RectangleShape fire3Collition(Vector2f(fireCollitionWidth, fireCollitionHeight));
+    
+    fire1Collition.setPosition(fire1X, fireCollitionRootY);
+    fire2Collition.setPosition(fire2X, fireCollitionRootY);
+    fire3Collition.setPosition(fire3X, fireCollitionRootY);
+    
+    Clock fireClock;
     //player textures
     Texture playerTexture;
-    
-    if(!playerTexture.loadFromFile("/Users/Newton/downloads/playerNormal.png")) {
-        cout<<"error loading player"<<endl;
-    }
+    playerTexture.loadFromFile("/Users/Newton/downloads/playerNormal.png");
     
     Texture playerRunningTexture;
+    playerRunningTexture.loadFromFile("/Users/Newton/downloads/playerRunning.png");
     
-    if(!playerRunningTexture.loadFromFile("/Users/Newton/downloads/playerRunning.png")) {
-        cout<<"error loading player running"<<endl;
-    }
-    
+    Texture playerSlidingTexture;
+    playerSlidingTexture.loadFromFile("//Users/Newton/downloads/playerSliding.png");
     //player
     Sprite player;
     const int playerWidth = 100;
@@ -69,15 +116,18 @@ int main() {
     const int playerRootX = 350;
     const int playerRootY = 450;
     player.setPosition(playerRootX, playerRootY);
-   
+    int playerCoins = 0;
+    //player collition box
+    RectangleShape playerCollitionBox(Vector2f(50, 100));
+    playerCollitionBox.setPosition(playerRootX, playerRootY);
     //player actions
     
     Clock jumpClock;
     Clock runClock;
+    Clock slideClock;
     
     bool playerSlideing = false;
     bool playerJumping = false;
-    
     
     while(window.isOpen()) {
         Event event;
@@ -87,47 +137,62 @@ int main() {
             if(event.type == Event::Closed) {
                 window.close();
             }
-            
-            switch (event.key.code) {
-                case Keyboard::S:
-                    playerSlideing = true;
-                    break;
-                    
-                case Keyboard::W:
-                    if(!playerJumping) {
-                        playerJumping = true;
-                        jumpClock.restart();
-                    }
-                    break;
-                    
-                default:
-                    break;
+            if(gameGoing == true) {
+                switch (event.key.code) {
+                    case Keyboard::S:
+                        if(!playerSlideing) {
+                            playerSlideing = true;
+                            slideClock.restart();
+                        }
+                        break;
+                        
+                    case Keyboard::W:
+                        if(!playerJumping) {
+                            playerJumping = true;
+                            jumpClock.restart();
+                        }
+                        break;
+                        
+                    default:
+                        break;
+                }
             }
         }
-        
         //player actions
         Time runningTime = runClock.getElapsedTime();
         Time runReset = seconds(0.3);
         Time runReset2 = seconds(0.15);
-        if(runningTime < runReset2) {
-            player.setTexture(playerRunningTexture);
-            player.setScale(1, 1);
-        }
-        else {
-            player.setTexture(playerTexture);
-            player.setScale(3, 3);
+        if(!playerSlideing && gameGoing == true) {
+            if(runningTime < runReset2) {
+                player.setTexture(playerRunningTexture);
+                player.setScale(1, 1);
+            }
+            else {
+                player.setTexture(playerTexture);
+                player.setScale(3, 3);
+            }
         }
         if(runningTime > runReset) {
             runClock.restart();
         }
         
         if(playerSlideing) {
-            player.setRotation(-45);
+            Time elapsedTime = slideClock.getElapsedTime();
+            Time slideTime = seconds(0.5);
+            if(elapsedTime < slideTime) {
+                player.setTexture(playerSlidingTexture);
+                player.setScale(1, 1);
+                player.setPosition(playerRootX, 490);
+            }
+            else {
+                playerSlideing = false;
+                player.setPosition(playerRootX, playerRootY);
+            }
         }
         
         if(playerJumping) {
             Time elapsedTime = jumpClock.getElapsedTime();
-            Time fiveSecounds = seconds(0.5);
+            Time fiveSecounds = seconds(1);
             if(elapsedTime < fiveSecounds) {
                 player.move(0, -1);
             }
@@ -139,34 +204,97 @@ int main() {
             }
         }
         
+        if(!gameGoing) {
+            player.setTexture(playerSlidingTexture);
+            player.setScale(1, 1);
+            player.setPosition(playerRootX, 490);
+        }
         //coin actions
-        
         Time coinTime = coinClock.getElapsedTime();
         Time coinReset = seconds(0.3);
         Time coinReset2 = seconds(0.15);
-        if(coinTime < coinReset2) {
-            coin.setTexture(coinSideTexture);
+        if(!collected) {
+            if(coinTime < coinReset2) {
+                coin.setTexture(coinSideTexture);
+            }
+            else {
+                coin.setTexture(coinFaceTexture);
+            }
+            
+            if(coinTime > coinReset) {
+                coinClock.restart();
+            }
         }
-        else {
-            coin.setTexture(coinFaceTexture);
+        if(gameGoing == true) {
+            coin.move(-1, 0);
         }
-        
-        if(coinTime > coinReset) {
-            coinClock.restart();
-        }
-        
-        coin.move(-1, 0);
+        coinCollitionBox.move(-1, 0);
         if(coin.getPosition().x < -20 ) {
+            collected = false;
             coin.setPosition(800, cointRootPosY);
         }
-        //coinCollitions
-        if(coin.getPosition().x > player.getPosition().x && coin.getPosition().y == player.getPosition().y) {
-            
+        if(coinCollitionBox.getPosition().x < -20) {
+            coinCollitionBox.setPosition(800, cointRootPosY);
+        }
+        if(coinCollitionBox.getGlobalBounds().intersects(playerCollitionBox.getGlobalBounds())) {
+            collected = true;
+            playerCoins += 1;
+        }
+        //fire actions
+        Time fireTime = fireClock.getElapsedTime();
+        Time fireReset = seconds(0.3);
+        Time fireReset2 = seconds(0.15);
+        
+        if(fireTime < fireReset) {
+            cout<<"fire1"<<endl;
+            fire1.setTexture(fireTexture1);
+        }
+        else if(fireTime < fireReset2) {
+            cout<<"fire2"<<endl;
+            fire1.setTexture(fireTexture3);
+        }
+        else {
+            fire1.setTexture(fireTexture1);
+        }
+        
+        if(fireTime > fireReset) {
+            fireClock.restart();
+        }
+        if(gameGoing == true) {
+            fire1.move(-1, 0);
+            fire1Collition.move(-1, 0);
+            fire2Collition.move(-1, 0);
+            fire3Collition.move(-1, 0);
+        }
+        if(fire1.getPosition().x < -40) {
+            fire1.setPosition(800, 470);
+        }
+        if(fire1Collition.getPosition().x < -40) {
+            fire1Collition.setPosition(800, 470);
+        }
+        if(fire2Collition.getPosition().x < -40) {
+            fire2Collition.setPosition(800, 470);
+        }
+        if(fire3Collition.getPosition().x < -40) {
+            fire3Collition.setPosition(800, 470);
+        }
+        //fire player collition
+        /*if(fire1Collition.getGlobalBounds().intersects(playerCollitionBox.getGlobalBounds())) {
+            cout<<"death by fire"<<endl;
+            cout<<fire1Collition.getPosition().x<<endl;
+            cout<<fire1.getPosition().x<<endl;
+            gameGoing = false;
+            gameOver();
+        }*/
+        if(fire1.getPosition().x - fireCollitionWidth / 2) {
+            cout<<"player fire collition"<<endl;
         }
         //floor actions
-        floor.move(-1, 0);
-        floor2.move(-1, 0);
-        floor3.move(-1, 0);
+        if(gameGoing == true) {
+            floor.move(-1, 0);
+            floor2.move(-1, 0);
+            floor3.move(-1, 0);
+        }
         
         if(floor.getPosition().x + 475 < 0) {
             floor.setPosition(0, 540);
@@ -183,14 +311,31 @@ int main() {
         //window loading
         
         window.clear(Color::White);
+        window.draw(coinCollitionBox);
+        window.draw(playerCollitionBox);
         window.draw(background);
         window.draw(floor);
         window.draw(floor3);
         window.draw(floor2);
+        window.draw(fire1);
+        window.draw(fire2);
+        window.draw(fire3);
+        window.draw(fire1Collition);
+        window.draw(fire2Collition);
+        window.draw(fire3Collition);
         window.draw(coin);
         window.draw(player);
         window.display();
     }
-    
+
     return EXIT_SUCCESS;
+}
+
+int main() {
+    if(gameGoing) {
+        gamePlay();
+    }
+    else  if(menu){
+        menuScene();
+    }
 }

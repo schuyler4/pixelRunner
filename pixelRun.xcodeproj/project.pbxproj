@@ -20,6 +20,10 @@
 		A6227A831DA1F1E900D8C2E6 /* coinSide.png in Resources */ = {isa = PBXBuildFile; fileRef = A6227A811DA1F1E900D8C2E6 /* coinSide.png */; };
 		A6227A851DA1FD6A00D8C2E6 /* pixelRunnerBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = A6227A841DA1FD6A00D8C2E6 /* pixelRunnerBackground.png */; };
 		A6227A871DA2025900D8C2E6 /* pixelRunnerFloor.png in Resources */ = {isa = PBXBuildFile; fileRef = A6227A861DA2025900D8C2E6 /* pixelRunnerFloor.png */; };
+		A6277E131DA2B7BB0032389F /* fire1.png in Resources */ = {isa = PBXBuildFile; fileRef = A6277E101DA2B7BB0032389F /* fire1.png */; };
+		A6277E141DA2B7BB0032389F /* fire2.png in Resources */ = {isa = PBXBuildFile; fileRef = A6277E111DA2B7BB0032389F /* fire2.png */; };
+		A6277E151DA2B7BB0032389F /* fire3.png in Resources */ = {isa = PBXBuildFile; fileRef = A6277E121DA2B7BB0032389F /* fire3.png */; };
+		A6277E171DA2B9DA0032389F /* playerSliding.png in Resources */ = {isa = PBXBuildFile; fileRef = A6277E161DA2B9DA0032389F /* playerSliding.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +44,10 @@
 		A6227A811DA1F1E900D8C2E6 /* coinSide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coinSide.png; sourceTree = "<group>"; };
 		A6227A841DA1FD6A00D8C2E6 /* pixelRunnerBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pixelRunnerBackground.png; sourceTree = SOURCE_ROOT; };
 		A6227A861DA2025900D8C2E6 /* pixelRunnerFloor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pixelRunnerFloor.png; sourceTree = SOURCE_ROOT; };
+		A6277E101DA2B7BB0032389F /* fire1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire1.png; path = ../fire1.png; sourceTree = "<group>"; };
+		A6277E111DA2B7BB0032389F /* fire2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire2.png; path = ../fire2.png; sourceTree = "<group>"; };
+		A6277E121DA2B7BB0032389F /* fire3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fire3.png; path = ../fire3.png; sourceTree = "<group>"; };
+		A6277E161DA2B9DA0032389F /* playerSliding.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playerSliding.png; path = ../playerSliding.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +102,10 @@
 		A6227A661DA1AB5600D8C2E6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A6277E161DA2B9DA0032389F /* playerSliding.png */,
+				A6277E121DA2B7BB0032389F /* fire3.png */,
+				A6277E111DA2B7BB0032389F /* fire2.png */,
+				A6277E101DA2B7BB0032389F /* fire1.png */,
 				A6227A861DA2025900D8C2E6 /* pixelRunnerFloor.png */,
 				A6227A841DA1FD6A00D8C2E6 /* pixelRunnerBackground.png */,
 				A6227A7E1DA1E9D700D8C2E6 /* playerRunning.png */,
@@ -165,15 +177,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6277E141DA2B7BB0032389F /* fire2.png in Resources */,
 				A6227A851DA1FD6A00D8C2E6 /* pixelRunnerBackground.png in Resources */,
 				A6227A7F1DA1E9D700D8C2E6 /* playerRunning.png in Resources */,
 				A6227A6E1DA1AB5600D8C2E6 /* icon.png in Resources */,
 				A6227A751DA1B1A300D8C2E6 /* playerNormal.png in Resources */,
+				A6277E171DA2B9DA0032389F /* playerSliding.png in Resources */,
 				A6227A6C1DA1AB5600D8C2E6 /* sansation.ttf in Resources */,
+				A6277E151DA2B7BB0032389F /* fire3.png in Resources */,
 				A6227A6A1DA1AB5600D8C2E6 /* nice_music.ogg in Resources */,
 				A6227A831DA1F1E900D8C2E6 /* coinSide.png in Resources */,
 				A6227A871DA2025900D8C2E6 /* pixelRunnerFloor.png in Resources */,
 				A6227A821DA1F1E900D8C2E6 /* coinFace.png in Resources */,
+				A6277E131DA2B7BB0032389F /* fire1.png in Resources */,
 				A6227A681DA1AB5600D8C2E6 /* cute_image.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -335,6 +351,7 @@
 				A6227A731DA1AB5600D8C2E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
