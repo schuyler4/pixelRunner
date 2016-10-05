@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A620E2371DA42E3B0062193D /* laser.png in Resources */ = {isa = PBXBuildFile; fileRef = A620E2361DA42E3B0062193D /* laser.png */; };
 		A6227A621DA1AB5600D8C2E6 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6227A611DA1AB5600D8C2E6 /* ResourcePath.mm */; };
 		A6227A681DA1AB5600D8C2E6 /* cute_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A6227A671DA1AB5600D8C2E6 /* cute_image.jpg */; };
 		A6227A6A1DA1AB5600D8C2E6 /* nice_music.ogg in Resources */ = {isa = PBXBuildFile; fileRef = A6227A691DA1AB5600D8C2E6 /* nice_music.ogg */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A620E2361DA42E3B0062193D /* laser.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = laser.png; sourceTree = "<group>"; };
 		A6227A5C1DA1AB5600D8C2E6 /* pixelRun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pixelRun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6227A601DA1AB5600D8C2E6 /* pixelRun-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "pixelRun-Info.plist"; sourceTree = "<group>"; };
 		A6227A611DA1AB5600D8C2E6 /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 		A6227A521DA1AB5600D8C2E6 = {
 			isa = PBXGroup;
 			children = (
+				A620E2361DA42E3B0062193D /* laser.png */,
 				A6227A5E1DA1AB5600D8C2E6 /* pixelRun */,
 				A6227A5D1DA1AB5600D8C2E6 /* Products */,
 			);
@@ -191,6 +194,7 @@
 				A6227A821DA1F1E900D8C2E6 /* coinFace.png in Resources */,
 				A6277E131DA2B7BB0032389F /* fire1.png in Resources */,
 				A6227A681DA1AB5600D8C2E6 /* cute_image.jpg in Resources */,
+				A620E2371DA42E3B0062193D /* laser.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

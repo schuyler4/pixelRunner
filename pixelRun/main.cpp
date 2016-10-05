@@ -2,12 +2,16 @@
 #include <iostream>
 #include "player.hpp"
 #include <vector>
+#include <ctime>
+#include <cstdlib>
 
 using namespace sf;
 using namespace std;
 
 bool gameGoing = true;
 bool menu = false;
+
+int gameSpeed = 1;
 
 int gameOver() {
     cout<<"gameover"<<endl;
@@ -19,11 +23,17 @@ int menuScene() {
     return EXIT_SUCCESS;
 }
 
+int fireSpeed() {
+    return 1 * gameSpeed;
+}
+
 int gamePlay() {
     RenderWindow window(VideoMode(800, 600) ,"Pixel Run");
     window.setFramerateLimit(200);
     
     const int scale = 2;
+    Clock totalTime;
+    
     //background stuff
     Texture backgroundTexture;
     backgroundTexture.loadFromFile("/Users/Newton/downloads/pixelRunnerBackground.png");
@@ -65,6 +75,17 @@ int gamePlay() {
     RectangleShape coinCollitionBox(Vector2f(50, 50));
     coinCollitionBox.setPosition(500, 450);
     Clock coinClock;
+    
+    Font coinTextFont;
+    coinTextFont.loadFromFile("sansation.ttf");
+    if(!coinTextFont.loadFromFile("sansation.ttf")) {
+        cout<<"error loading text"<<endl;
+    }
+    
+    Text coinNumberText;
+    coinNumberText.setString("panda");
+    coinNumberText.setColor(Color::Black);
+    coinNumberText.setCharacterSize(50);
     //fire stuff
     Texture fireTexture1;
     Texture fireTexture2;
@@ -80,6 +101,29 @@ int gamePlay() {
     int fire3X = 1400;
     int fireCollitionRootY = 490;
     
+    int fireResetRandom1 = rand() % 2 + 1;
+    int fireResetRandom2 = rand() % 2 + 1;
+    int fireResetRandom3 = rand() % 2 + 1;
+    bool fireIsReset1, fireIsReset2, fireIsReset3;
+    if(fireResetRandom1 == 2) {
+        fireIsReset1 = true;
+    }
+    else {
+        fireIsReset1 = false;
+    }
+    if(fireResetRandom2 == 2) {
+        fireIsReset2 = true;
+    }
+    else {
+        fireIsReset2 = false;
+    }
+    if(fireResetRandom3 == 2) {
+        fireIsReset3 = true;
+    }
+    else {
+        fireIsReset3 = false;
+    }
+    
     int fireCollitionWidth = 70;
     int fireCollitionHeight = 50;
     
@@ -91,15 +135,24 @@ int gamePlay() {
     fire3.setTexture(fireTexture1);
     fire3.setPosition(fire3X, fireRootY);
     
-    RectangleShape fire1Collition(Vector2f(fireCollitionWidth, fireCollitionHeight));
-    RectangleShape fire2Collition(Vector2f(fireCollitionWidth, fireCollitionHeight));
-    RectangleShape fire3Collition(Vector2f(fireCollitionWidth, fireCollitionHeight));
-    
-    fire1Collition.setPosition(fire1X, fireCollitionRootY);
-    fire2Collition.setPosition(fire2X, fireCollitionRootY);
-    fire3Collition.setPosition(fire3X, fireCollitionRootY);
-    
     Clock fireClock;
+    //laserStuff
+    Texture laserTexture;
+    laserTexture.loadFromFile("/Users/Newton/downloads/laser.png");
+    
+    Sprite laser1, laser2;
+    
+    laser1.setTexture(laserTexture);
+    laser2.setTexture(laserTexture);
+    laser1.setPosition(100, 490);
+    laser2.setPosition(300, 490);
+    
+    int laserCollitionSize = 50;
+    RectangleShape laserCollition1(Vector2f(laserCollitionSize, laserCollitionSize));
+    RectangleShape laserCollition2(Vector2f(laserCollitionSize, laserCollitionSize));
+    
+    laserCollition1.setPosition(100, 100);
+    laserCollition2.setPosition(200, 200);
     //player textures
     Texture playerTexture;
     playerTexture.loadFromFile("/Users/Newton/downloads/playerNormal.png");
@@ -119,7 +172,7 @@ int gamePlay() {
     int playerCoins = 0;
     //player collition box
     RectangleShape playerCollitionBox(Vector2f(50, 100));
-    playerCollitionBox.setPosition(playerRootX, playerRootY);
+    playerCollitionBox.setPosition(playerRootX + 20, playerRootY);
     //player actions
     
     Clock jumpClock;
@@ -183,6 +236,7 @@ int gamePlay() {
                 player.setTexture(playerSlidingTexture);
                 player.setScale(1, 1);
                 player.setPosition(playerRootX, 490);
+                playerCollitionBox.setRotation(90);
             }
             else {
                 playerSlideing = false;
@@ -192,12 +246,14 @@ int gamePlay() {
         
         if(playerJumping) {
             Time elapsedTime = jumpClock.getElapsedTime();
-            Time fiveSecounds = seconds(1);
-            if(elapsedTime < fiveSecounds) {
-                player.move(0, -1);
+            Time jumpSecounds = seconds(1);
+            if(elapsedTime < jumpSecounds) {
+                player.move(0, -2);
+                playerCollitionBox.move(0, -2);
             }
             else {
-                player.move(0, 1);
+                player.move(0, 2);
+                playerCollitionBox.move(0, 2);
             }
             if(player.getPosition().y == playerRootY) {
                 playerJumping = false;
@@ -225,10 +281,11 @@ int gamePlay() {
                 coinClock.restart();
             }
         }
+        int coinMovmentSpeed = 1 * gameSpeed;
         if(gameGoing == true) {
-            coin.move(-1, 0);
+            coin.move(-coinMovmentSpeed, 0);
         }
-        coinCollitionBox.move(-1, 0);
+        coinCollitionBox.move(-coinMovmentSpeed, 0);
         if(coin.getPosition().x < -20 ) {
             collected = false;
             coin.setPosition(800, cointRootPosY);
@@ -260,34 +317,42 @@ int gamePlay() {
         if(fireTime > fireReset) {
             fireClock.restart();
         }
+        int fireSpeed = 1 * gameSpeed;
         if(gameGoing == true) {
-            fire1.move(-1, 0);
-            fire1Collition.move(-1, 0);
-            fire2Collition.move(-1, 0);
-            fire3Collition.move(-1, 0);
+            fire1.move(-fireSpeed, 0);
+            fire2.move(-fireSpeed, 0);
+            fire3.move(-fireSpeed, 0);
         }
         if(fire1.getPosition().x < -40) {
             fire1.setPosition(800, 470);
         }
-        if(fire1Collition.getPosition().x < -40) {
-            fire1Collition.setPosition(800, 470);
+        if(fire2.getPosition().x < -40) {
+            fire2.setPosition(800, 470);
         }
-        if(fire2Collition.getPosition().x < -40) {
-            fire2Collition.setPosition(800, 470);
-        }
-        if(fire3Collition.getPosition().x < -40) {
-            fire3Collition.setPosition(800, 470);
+        if(fire2.getPosition().x < -40) {
+            fire2.setPosition(800, 470);
         }
         //fire player collition
-        /*if(fire1Collition.getGlobalBounds().intersects(playerCollitionBox.getGlobalBounds())) {
-            cout<<"death by fire"<<endl;
-            cout<<fire1Collition.getPosition().x<<endl;
-            cout<<fire1.getPosition().x<<endl;
+        if(playerCollitionBox.getGlobalBounds().intersects(fire1.getGlobalBounds())) {
             gameGoing = false;
-            gameOver();
-        }*/
-        if(fire1.getPosition().x - fireCollitionWidth / 2) {
-            cout<<"player fire collition"<<endl;
+        }
+        else if(playerCollitionBox.getGlobalBounds().intersects(fire2.getGlobalBounds())) {
+            gameGoing = false;
+        }
+        else if(playerCollitionBox.getGlobalBounds().intersects(fire2.getGlobalBounds())) {
+            gameGoing = false;
+        }
+        //laser actions
+        int laserSpeed = 1 * gameSpeed;
+        if(gameGoing == true) {
+            laser1.move(-laserSpeed, 0);
+            laser2.move(-laserSpeed, 0);
+            if(laser1.getPosition().x < -40) {
+                laser1.setPosition(800, 490);
+            }
+            if(laser2.getPosition().x < -40) {
+                laser2.setPosition(800, 490);
+            }
         }
         //floor actions
         if(gameGoing == true) {
@@ -300,31 +365,51 @@ int gamePlay() {
             floor.setPosition(0, 540);
         }
         if(floor2.getPosition().x + 475 < 475) {
-            cout<<"floor 2"<<endl;
+            //cout<<"floor 2"<<endl;
             floor2.setPosition(0, 540);
         }
         if(floor3.getPosition().x + 475 < 950) {
-            cout<<"floor 3"<<endl;
+            //cout<<"floor 3"<<endl;
             floor3.setPosition(0, 540);
         }
-        
+        //increment gameSpeed
+        if(gameGoing == true) {
+            Time totaltimer = totalTime.getElapsedTime();
+            Time speedUpTime = seconds(30);
+            cout<<totaltimer.asSeconds()<<endl;
+            cout<<gameSpeed<<endl;
+            if(totaltimer == speedUpTime) {
+                cout<<"speed up"<<endl;
+                gameSpeed += 0.5;
+            }
+        }
         //window loading
         
         window.clear(Color::White);
         window.draw(coinCollitionBox);
-        window.draw(playerCollitionBox);
         window.draw(background);
+        window.draw(playerCollitionBox);
         window.draw(floor);
         window.draw(floor3);
         window.draw(floor2);
-        window.draw(fire1);
-        window.draw(fire2);
-        window.draw(fire3);
-        window.draw(fire1Collition);
-        window.draw(fire2Collition);
-        window.draw(fire3Collition);
-        window.draw(coin);
+        if(fireIsReset1 == true) {
+            window.draw(fire1);
+        }
+        if(fireIsReset2 == true) {
+            window.draw(fire2);
+        }
+        if(fireIsReset3 == true) {
+            window.draw(fire3);
+        }
+        if(!collected) {
+            window.draw(coin);
+        }
+        window.draw(coinNumberText);
         window.draw(player);
+        window.draw(laser1);
+        window.draw(laser2);
+        window.draw(laserCollition1);
+        window.draw(laserCollition2);
         window.display();
     }
 
